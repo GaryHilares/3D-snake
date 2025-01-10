@@ -1,0 +1,25 @@
+{
+  "name": "3d-snake",
+  "version": "1.0.0",
+  "description": "3D snake game built with Three.js.",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "npx vite",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "3d",
+    "snake",
+    "game"
+  ],
+  "author": "Gary Hilares",
+  "license": "CC-BY-3.0",
+  "dependencies": {
+    "@types/three": "^0.171.0",
+    "three": "^0.171.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "vite": "^6.0.4"
+  }
+}
