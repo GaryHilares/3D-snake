@@ -241,16 +241,16 @@ class Food {
  * @brief Represents a game state in the snake game.
  */
 class GameState {
-  observable: GameStateObservable;
-  snake: Snake;
-  foods: Food[];
+  private observable: GameStateObservable;
+  private snake: Snake;
+  private foods: Food[];
 
   /**
    * @brief Creates a new game state, with the given observers.
    * @param observers Observers that will observe this game state.
    */
   constructor(observers: GameStateObserver[] = []) {
-    const FOOD_AMOUNT = 1;
+    const FOOD_AMOUNT = 10;
     this.observable = new GameStateObservable(observers);
     this.snake = new Snake(this.observable);
     this.foods = [];
