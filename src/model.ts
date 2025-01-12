@@ -1,4 +1,9 @@
 /**
+ * @brief Size of a side of the game box. Must be odd.
+ */
+const GAME_BOX_SIDE = 21;
+
+/**
  * @brief Represents an observer that can observe a game state observable.
  */
 interface GameStateObserver {
@@ -242,6 +247,19 @@ class Snake {
     });
   }
 
+  public isHeadOutOfGameBounds(): boolean {
+    const half_edge = Math.floor(GAME_BOX_SIDE / 2);
+    const head = this.getHead();
+    return (
+      head.getX() < -half_edge ||
+      head.getX() > half_edge ||
+      head.getY() < -half_edge ||
+      head.getY() > half_edge ||
+      head.getZ() < -half_edge ||
+      head.getZ() > half_edge
+    );
+  }
+
   /**
    * @brief Produces the position of the head of the snake.
    * @returns The position of the head of the snake.
@@ -323,7 +341,9 @@ class GameState {
    * @returns True if the game is over, false otherwise.
    */
   public gameOver() {
-    return this.snake.isHeadCrossingBody();
+    return (
+      this.snake.isHeadCrossingBody() || this.snake.isHeadOutOfGameBounds()
+    );
   }
 
   /**
@@ -359,13 +379,26 @@ class GameState {
    * @returns A new piece of food at random position.
    */
   private createRandomFood(): Food {
-    const SPAWN_CUBE_SIDE = 10;
-    const x = Math.floor(SPAWN_CUBE_SIDE * Math.random());
-    const y = Math.floor(SPAWN_CUBE_SIDE * Math.random());
-    const z = Math.floor(SPAWN_CUBE_SIDE * Math.random());
+    const x = Math.floor(
+      GAME_BOX_SIDE * Math.random() - Math.floor(GAME_BOX_SIDE / 2)
+    );
+    const y = Math.floor(
+      GAME_BOX_SIDE * Math.random() - Math.floor(GAME_BOX_SIDE / 2)
+    );
+    const z = Math.floor(
+      GAME_BOX_SIDE * Math.random() - Math.floor(GAME_BOX_SIDE / 2)
+    );
     const pos = new Position(x, y, z);
     return new Food(pos);
   }
 }
 
-export { Position, Direction, Food, Snake, GameState, GameStateObserver };
+export {
+  Position,
+  Direction,
+  Food,
+  Snake,
+  GameState,
+  GameStateObserver,
+  GAME_BOX_SIDE,
+};

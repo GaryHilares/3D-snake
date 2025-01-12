@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Position, GameStateObserver } from "./model";
+import { Position, GameStateObserver, GAME_BOX_SIDE } from "./model";
 
 /**
  * @brief Represents controls to make rotate the camera around a position.
@@ -118,6 +118,18 @@ class GameView implements GameStateObserver {
     this.meshes = {};
     this.camera.position.z = 5;
     this.controls = new CustomOrbitControls(this.camera);
+    const borderShape = new THREE.BoxGeometry(
+      GAME_BOX_SIDE,
+      GAME_BOX_SIDE,
+      GAME_BOX_SIDE
+    );
+    const borderGeometry = new THREE.EdgesGeometry(borderShape);
+    const borderMaterial = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      linewidth: 3,
+    });
+    const border = new THREE.LineSegments(borderGeometry, borderMaterial);
+    this.scene.add(border);
   }
 
   /**
