@@ -1,24 +1,41 @@
 import * as THREE from "three";
 import { Position, GameStateObserver } from "./model";
 
+/**
+ * @brief Represents controls to make rotate the camera around a position.
+ */
 class CustomOrbitControls {
-  private camera: THREE.Object3D;
+  private camera: THREE.Camera;
   private focus: Position;
   private theta: number;
   private phi: number;
   private distance: number;
 
-  constructor(camera: THREE.Object3D) {
+  /**
+   * @brief Creates a new CustomOrbitControls that control the given camera.
+   * @param camera The camera to be controller by these controls.
+   */
+  constructor(camera: THREE.Camera) {
     this.camera = camera;
     this.focus = new Position(0, 0, 0);
-    this.resetCameraAngle();
+    this.resetCameraPosition();
   }
 
+  /**
+   * @brief Changes the position that the camera is orbiting around.
+   * @param newFocus New position to orbit around.
+   */
   public changeFocus(newFocus: Position): void {
     this.focus = newFocus;
     this.adjustCamera();
   }
 
+  /**
+   * @brief Changes the angle from which the camera is looking by the given
+   *        amounts, clamping the azimuthal angle to [0, Math.PI].
+   * @param thetaOffset Amount to add to the polar angle.
+   * @param phiOffset Amount to add to the azimuthal angle.
+   */
   public changeAngle(thetaOffset: number, phiOffset: number): void {
     const MIN_PHI = 0;
     const MAX_PHI = Math.PI;
@@ -27,6 +44,11 @@ class CustomOrbitControls {
     this.adjustCamera();
   }
 
+  /**
+   * @brief Changes the distance from the camera to the focused object by the
+   *        given amount. Clamps the distance to [5, 20].
+   * @param distanceOffset Amount to add to the distance.
+   */
   public changeDistance(distanceOffset: number): void {
     const MIN_DISTANCE = 5;
     const MAX_DISTANCE = 20;
@@ -37,13 +59,21 @@ class CustomOrbitControls {
     this.adjustCamera();
   }
 
-  public resetCameraAngle(): void {
+  /**
+   * @brief Resets the values associated to the angle and distance of the
+   *        camera to its original values.
+   */
+  public resetCameraPosition(): void {
     this.theta = 0;
     this.phi = Math.PI / 2;
     this.distance = 10;
     this.adjustCamera();
   }
 
+  /**
+   * @brief Adjusts the position of the Three.js camera object to match the
+   *        angle, distance and focus stored by the controls.
+   */
   private adjustCamera(): void {
     const angle = new THREE.Euler(
       -Math.PI / 2 + this.phi,
@@ -101,6 +131,7 @@ class GameView implements GameStateObserver {
 
   /**
    * @brief Adds the snake body to the view when it enters a new square.
+   *        Refocuses the camera on the head of the snake.
    * @param position Position that the snake entered.
    */
   public snakeEntered(position: Position): void {
@@ -143,16 +174,31 @@ class GameView implements GameStateObserver {
     renderer.render(this.scene, this.camera);
   }
 
+  /**
+   * @brief Changes the angle from which the camera is looking by the given
+   *        amounts, clamping the azimuthal angle to [0, Math.PI].
+   * @param thetaOffset Amount to add to the polar angle.
+   * @param phiOffset Amount to add to the azimuthal angle.
+   */
   public changeAngle(thetaOffset: number, phiOffset: number): void {
     this.controls.changeAngle(thetaOffset, phiOffset);
   }
 
+  /**
+   * @brief Changes the distance from the camera to the focused object by the
+   *        given amount. Clamps the distance to [5, 20].
+   * @param distanceOffset Amount to add to the distance.
+   */
   public changeDistance(distanceOffset: number): void {
     this.controls.changeDistance(distanceOffset);
   }
 
-  public resetCameraAngle(): void {
-    this.controls.resetCameraAngle();
+  /**
+   * @brief Resets the values associated to the angle and distance of the
+   *        camera to its original values.
+   */
+  public resetCameraPosition(): void {
+    this.controls.resetCameraPosition();
   }
 }
 

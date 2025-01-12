@@ -3,6 +3,9 @@ import { GameController, ViewController } from "./controller";
 import { GameState } from "./model";
 import { GameView } from "./view";
 
+/**
+ * @brief Entrypoint of the program. Runs the 3D snake game.
+ */
 function main() {
   const gameView = new GameView(window.innerWidth / window.innerHeight);
   const gameState = new GameState([gameView]);

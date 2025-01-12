@@ -91,7 +91,7 @@ class Position {
   private z: number;
 
   /**
-   * Creates a new position with the given coordinates.
+   * @brief Creates a new position with the given coordinates.
    * @param x x-coordinate of the position.
    * @param y y-coordinate of the position.
    * @param z z-coordinate of the position.
@@ -103,7 +103,7 @@ class Position {
   }
 
   /**
-   * Produces the x-coordinate of this position.
+   * @brief Produces the x-coordinate of this position.
    * @returns x-coordinate of this position.
    */
   getX(): number {
@@ -111,7 +111,7 @@ class Position {
   }
 
   /**
-   * Produces the y-coordinate of this position.
+   * @brief Produces the y-coordinate of this position.
    * @returns y-coordinate of this position.
    */
   getY(): number {
@@ -119,7 +119,7 @@ class Position {
   }
 
   /**
-   * Produces the z-coordinate of this position.
+   * @brief Produces the z-coordinate of this position.
    * @returns z-coordinate of this position.
    */
   getZ(): number {
@@ -135,6 +135,11 @@ class Position {
     return this.x === pos.x && this.y === pos.y && this.z === pos.z;
   }
 
+  /**
+   * @brief Produces a string representation of this position different to that
+   *        produced by toString.
+   * @returns A string representation of this position.
+   */
   toStringCustom(): string {
     return `(${this.x}, ${this.y}, ${this.z})`;
   }
@@ -188,10 +193,20 @@ class Snake {
     }
   }
 
+  /**
+   * @brief Checks if the given food will be eaten by the snake in its next
+   *        move.
+   * @param food Food to check for.
+   * @returns True if the given food will be eaten by the snake in the next
+   *          move, false otherwise.
+   */
   public willEatFoodNext(food: Food): boolean {
     return this.targetBlock().equals(food.getLocation());
   }
 
+  /**
+   * @brief Makes the snake move without growing in size.
+   */
   public moveAndNotGrow(): void {
     this.observable.notifySnakeLeft(this.body[this.body.length - 1]);
     for (let i = this.body.length - 1; i > 0; i--) {
@@ -201,15 +216,25 @@ class Snake {
     this.observable.notifySnakeEntered(this.body[0]);
   }
 
+  /**
+   * @brief Makes the snake move and grow in size.
+   */
   public moveAndGrow(): void {
     this.body.unshift(this.targetBlock());
     this.observable.notifySnakeEntered(this.body[0]);
   }
 
+  /**
+   * @brief Sets the orientation of the snake to the given direction.
+   */
   public setDirection(direction: Direction) {
     this.orientation = direction;
   }
 
+  /**
+   * @brief Checks if the head of the snake is crossing the body.
+   * @returns True if the head is crossing the body, false otherwise.
+   */
   public isHeadCrossingBody(): boolean {
     const head = this.getHead();
     return this.body.some((position, idx) => {
@@ -217,7 +242,11 @@ class Snake {
     });
   }
 
-  private getHead() {
+  /**
+   * @brief Produces the position of the head of the snake.
+   * @returns The position of the head of the snake.
+   */
+  private getHead(): Position {
     return this.body[0];
   }
 }
@@ -228,10 +257,18 @@ class Snake {
 class Food {
   private location: Position;
 
+  /**
+   * @brief Creates a new piece of food with the given position.
+   * @param location The position to create the food at.
+   */
   constructor(location: Position) {
     this.location = location;
   }
 
+  /**
+   * @brief Produces the location where the food is located.
+   * @returns Position where the food is located.
+   */
   public getLocation(): Position {
     return this.location;
   }
