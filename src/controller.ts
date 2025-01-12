@@ -46,7 +46,7 @@ class GameController {
    */
   public updateGame(time: number): void {
     if (!this.gameState.gameOver()) {
-      const UPDATE_DELAY = 250;
+      const UPDATE_DELAY = 60;
       if (this.lastUpdated == null) {
         this.lastUpdated = time;
       } else if (this.lastUpdated + UPDATE_DELAY < time) {
