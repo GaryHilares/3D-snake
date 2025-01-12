@@ -1,17 +1,24 @@
-import { Direction, GameState } from "./model";
+import { Direction } from "./model";
+import { GameView } from "./view";
+
+interface GameStateable {
+  goToNextState(): void;
+  gameOver(): boolean;
+  setSnakeDirection(direction: Direction): void;
+}
 
 /**
  * @brief Represents a game controller that updates a given game state.
  */
 class GameController {
-  private gameState: GameState;
+  private gameState: GameStateable;
   private lastUpdated: number | null;
 
   /**
    * @brief Creates a game controller that updates the given game state.
    * @param gameState Game state that this game controller will control.
    */
-  constructor(gameState: GameState) {
+  constructor(gameState: GameStateable) {
     this.gameState = gameState;
     this.lastUpdated = null;
   }
@@ -70,4 +77,38 @@ class GameController {
   }
 }
 
-export { GameController };
+class ViewController {
+  private view: GameView;
+  private isMouseDown: boolean;
+
+  constructor(view: GameView) {
+    this.view = view;
+    this.isMouseDown = false;
+  }
+
+  public onMouseDown() {
+    this.isMouseDown = true;
+  }
+
+  public onMouseUp() {
+    this.isMouseDown = false;
+  }
+
+  public onMouseMove(event: MouseEvent) {
+    if (this.isMouseDown) {
+      this.view.changeAngle(event.movementX / 300, -event.movementY / 300);
+    }
+  }
+
+  public onWheel(event: WheelEvent) {
+    this.view.changeDistance(event.deltaY / 300);
+  }
+
+  public onKeyPress(event: KeyboardEvent) {
+    if (event.key == "c") {
+      this.view.resetCameraAngle();
+    }
+  }
+}
+
+export { GameController, ViewController };

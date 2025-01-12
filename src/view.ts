@@ -1,6 +1,68 @@
 import * as THREE from "three";
 import { Position, GameStateObserver } from "./model";
 
+class CustomOrbitControls {
+  private camera: THREE.Object3D;
+  private focus: Position;
+  private theta: number;
+  private phi: number;
+  private distance: number;
+
+  constructor(camera: THREE.Object3D) {
+    this.camera = camera;
+    this.focus = new Position(0, 0, 0);
+    this.resetCameraAngle();
+  }
+
+  public changeFocus(newFocus: Position): void {
+    this.focus = newFocus;
+    this.adjustCamera();
+  }
+
+  public changeAngle(thetaOffset: number, phiOffset: number): void {
+    const MIN_PHI = 0;
+    const MAX_PHI = Math.PI;
+    this.theta = this.theta + thetaOffset;
+    this.phi = Math.min(MAX_PHI, Math.max(MIN_PHI, this.phi + phiOffset));
+    this.adjustCamera();
+  }
+
+  public changeDistance(distanceOffset: number): void {
+    const MIN_DISTANCE = 5;
+    const MAX_DISTANCE = 20;
+    this.distance = Math.min(
+      MAX_DISTANCE,
+      Math.max(MIN_DISTANCE, this.distance + distanceOffset)
+    );
+    this.adjustCamera();
+  }
+
+  public resetCameraAngle(): void {
+    this.theta = 0;
+    this.phi = Math.PI / 2;
+    this.distance = 10;
+    this.adjustCamera();
+  }
+
+  private adjustCamera(): void {
+    const angle = new THREE.Euler(
+      -Math.PI / 2 + this.phi,
+      this.theta,
+      0,
+      "ZYX"
+    );
+    this.camera.position.x =
+      this.focus.getX() +
+      this.distance * Math.sin(this.theta) * Math.sin(this.phi);
+    this.camera.position.y =
+      this.focus.getY() + this.distance * Math.cos(this.phi);
+    this.camera.position.z =
+      this.focus.getZ() +
+      this.distance * Math.cos(this.theta) * Math.sin(this.phi);
+    this.camera.setRotationFromEuler(angle);
+  }
+}
+
 /**
  * @brief Represents a 3D view of the game state that uses Three.js.
  */
@@ -11,6 +73,7 @@ class GameView implements GameStateObserver {
   private snakeMaterial: THREE.MeshBasicMaterial;
   private foodMaterial: THREE.MeshBasicMaterial;
   private meshes: { [pos: string]: THREE.Mesh };
+  private controls: CustomOrbitControls;
 
   /**
    * Creates a new 3D game view.
@@ -24,6 +87,7 @@ class GameView implements GameStateObserver {
     this.foodMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     this.meshes = {};
     this.camera.position.z = 5;
+    this.controls = new CustomOrbitControls(this.camera);
   }
 
   /**
@@ -46,6 +110,7 @@ class GameView implements GameStateObserver {
     newSnake.position.y = position.getY();
     newSnake.position.z = position.getZ();
     this.scene.add(newSnake);
+    this.controls.changeFocus(position);
   }
 
   /**
@@ -76,6 +141,18 @@ class GameView implements GameStateObserver {
    */
   public renderOn(renderer: THREE.WebGLRenderer): void {
     renderer.render(this.scene, this.camera);
+  }
+
+  public changeAngle(thetaOffset: number, phiOffset: number): void {
+    this.controls.changeAngle(thetaOffset, phiOffset);
+  }
+
+  public changeDistance(distanceOffset: number): void {
+    this.controls.changeDistance(distanceOffset);
+  }
+
+  public resetCameraAngle(): void {
+    this.controls.resetCameraAngle();
   }
 }
 
