@@ -151,15 +151,16 @@ class Position {
 }
 
 /**
- * @brief Represents a 3D direction.
+ * @brief Represents a 3D direction. For all directions d, -d is the opposite
+ *        direction.
  */
 enum Direction {
-  X_POSITIVE,
-  X_NEGATIVE,
-  Y_POSITIVE,
-  Y_NEGATIVE,
-  Z_POSITIVE,
-  Z_NEGATIVE,
+  X_POSITIVE = 1,
+  X_NEGATIVE = -1,
+  Y_POSITIVE = 2,
+  Y_NEGATIVE = -2,
+  Z_POSITIVE = 3,
+  Z_NEGATIVE = -3,
 }
 
 /**
@@ -230,10 +231,13 @@ class Snake {
   }
 
   /**
-   * @brief Sets the orientation of the snake to the given direction.
+   * @brief Sets the orientation of the snake to the given direction if it is
+   *        a legal move (i.e. if the new orientation is not the opposite one).
    */
-  public setDirection(direction: Direction) {
-    this.orientation = direction;
+  public tryToSetDirection(direction: Direction) {
+    if (direction != -this.orientation) {
+      this.orientation = direction;
+    }
   }
 
   /**
@@ -331,8 +335,8 @@ class GameState {
    * @brief Sets the snake to face a new direction.
    * @param direction The new direction for the snake.
    */
-  public setSnakeDirection(direction: Direction) {
-    this.snake.setDirection(direction);
+  public tryToSetSnakeDirection(direction: Direction) {
+    this.snake.tryToSetDirection(direction);
   }
 
   /**

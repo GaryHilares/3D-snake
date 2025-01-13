@@ -20,7 +20,7 @@ interface GameStateable {
    * Changes the orientation of the snake to the given direction.
    * @param direction Direction to set the snake orientation to.
    */
-  setSnakeDirection(direction: Direction): void;
+  tryToSetSnakeDirection(direction: Direction): void;
 }
 
 /**
@@ -71,22 +71,22 @@ class GameController {
     if (!this.gameState.gameOver()) {
       switch (event.key) {
         case "a":
-          this.gameState.setSnakeDirection(Direction.X_NEGATIVE);
+          this.gameState.tryToSetSnakeDirection(Direction.X_NEGATIVE);
           break;
         case "d":
-          this.gameState.setSnakeDirection(Direction.X_POSITIVE);
+          this.gameState.tryToSetSnakeDirection(Direction.X_POSITIVE);
           break;
         case "s":
-          this.gameState.setSnakeDirection(Direction.Y_NEGATIVE);
+          this.gameState.tryToSetSnakeDirection(Direction.Y_NEGATIVE);
           break;
         case "w":
-          this.gameState.setSnakeDirection(Direction.Y_POSITIVE);
+          this.gameState.tryToSetSnakeDirection(Direction.Y_POSITIVE);
           break;
         case "q":
-          this.gameState.setSnakeDirection(Direction.Z_NEGATIVE);
+          this.gameState.tryToSetSnakeDirection(Direction.Z_NEGATIVE);
           break;
         case "e":
-          this.gameState.setSnakeDirection(Direction.Z_POSITIVE);
+          this.gameState.tryToSetSnakeDirection(Direction.Z_POSITIVE);
           break;
       }
     }
