@@ -11,7 +11,7 @@ function main() {
   const gameState = new GameState([gameView]);
   const gameController = new GameController(gameState);
   const viewController = new ViewController(gameView);
-  const renderer = new THREE.WebGLRenderer();
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   window.addEventListener("keydown", (event: KeyboardEvent) => {
