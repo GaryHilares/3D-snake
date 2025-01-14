@@ -2,6 +2,32 @@ import * as THREE from "three";
 import { Position, GameStateObserver, GAME_BOX_SIDE } from "./model";
 
 /**
+ * @brief Represents a view of the amount of points owned by the player.
+ */
+class PointsCounterView {
+  private static menuDomId = "point-counter";
+  private static counterDomId = "point-counter--points";
+
+  /**
+   * @brief Sets whether the view should be displayed or not.
+   * @param shouldShow True if the menu should be shown, false otherwise.
+   */
+  public static setShowing(shouldShow: boolean): void {
+    document.getElementById(PointsCounterView.menuDomId)!.style.visibility =
+      shouldShow ? "visible" : "hidden";
+  }
+
+  /**
+   * @brief Sets the amount of points displayed on this view.
+   * @param points Amount of points to be displayed.
+   */
+  public static setPointCount(points: number): void {
+    document.getElementById(PointsCounterView.counterDomId)!.textContent =
+      points.toString();
+  }
+}
+
+/**
  * @brief Represents controls to make rotate the camera around a position.
  */
 class CustomOrbitControls {
@@ -19,6 +45,7 @@ class CustomOrbitControls {
     this.camera = camera;
     this.focus = new Position(0, 0, 0);
     this.resetCameraPosition();
+    PointsCounterView.setShowing(true);
   }
 
   /**
@@ -238,6 +265,14 @@ class GameView implements GameStateObserver {
    */
   public resetCameraPosition(): void {
     this.controls.resetCameraPosition();
+  }
+
+  /**
+   * @brief Updates the point counter view when the amount of points changes.
+   * @param newPoints New amount of point owned by the player.
+   */
+  public pointsChanged(newPoints: number): void {
+    PointsCounterView.setPointCount(newPoints);
   }
 }
 

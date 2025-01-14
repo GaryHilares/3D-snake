@@ -8,28 +8,34 @@ const GAME_BOX_SIDE = 21;
  */
 interface GameStateObserver {
   /**
-   * Handles the case where the snake left the given position.
+   * @brief Handles the event where the snake left the given position.
    * @param position The position that the snake left.
    */
   snakeLeft(position: Position): void;
 
   /**
-   * Handles the case where the snake entered the given position.
+   * @brief Handles the event where the snake entered the given position.
    * @param position The position that the snake entered.
    */
   snakeEntered(position: Position): void;
 
   /**
-   * Handles the case where the food left the given position.
+   * Handles the event where the food left the given position.
    * @param position The position that the food left.
    */
   foodLeft(position: Position): void;
 
   /**
-   * Handles the case where the food entered the given position.
+   * @brief Handles the event where the food entered the given position.
    * @param position The position that the food entered.
    */
   foodEntered(position: Position): void;
+
+  /**
+   * @brief Handles the event where the amount of points changes.
+   * @param newPoints New amount of points owned by the player.
+   */
+  pointsChanged(newPoints: number): void;
 }
 
 /**
@@ -83,6 +89,16 @@ class GameStateObservable {
   public notifyFoodEntered(position: Position): void {
     for (let observer of this.observers) {
       observer.foodEntered(position);
+    }
+  }
+
+  /**
+   * @brief Notifies observers that the amount of points has changed.
+   * @param newPoints New amount of points.
+   */
+  public notifyPointsChanged(newPoints: number): void {
+    for (let observer of this.observers) {
+      observer.pointsChanged(newPoints);
     }
   }
 }
@@ -303,6 +319,7 @@ class GameState {
   private observable: GameStateObservable;
   private snake: Snake;
   private foods: Food[];
+  private points: number;
 
   /**
    * @brief Creates a new game state, with the given observers.
@@ -313,9 +330,11 @@ class GameState {
     this.observable = new GameStateObservable(observers);
     this.snake = new Snake(this.observable);
     this.foods = [];
+    this.points = 0;
     for (let i = 0; i < FOOD_AMOUNT; i++) {
       this.replaceFood();
     }
+    this.observable.notifyPointsChanged(this.points);
   }
 
   /**
@@ -328,6 +347,7 @@ class GameState {
     } else {
       this.replaceFood(consumedFoodIndex);
       this.snake.moveAndGrow();
+      this.increasePoints();
     }
   }
 
@@ -348,6 +368,14 @@ class GameState {
     return (
       this.snake.isHeadCrossingBody() || this.snake.isHeadOutOfGameBounds()
     );
+  }
+
+  /**
+   * @brief Increases the amount of points and notifies observers about it.
+   */
+  private increasePoints(): void {
+    this.points++;
+    this.observable.notifyPointsChanged(this.points);
   }
 
   /**
