@@ -26,5 +26,36 @@
     >
       Points: <span id="point-counter--points">0</span>
     </div>
+    <div
+      id="gameover-menu"
+      style="
+        visibility: hidden;
+        position: absolute;
+        color: white;
+        font-size: 28px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background-color: black;
+        padding: 50px 100px;
+        border: 1px solid white;
+      "
+    >
+      <span style="display: block; font-size: 20px"
+        >Run #<span id="gameover-menu--local-run-counter">50</span> (Global
+        #<span id="gameover-menu--global-run-counter">1</span>)</span
+      >
+      <span style="display: block; font-weight: bold; font-size: 64px"
+        >Game over</span
+      >
+      <span style="display: block"
+        >Points: <span id="gameover-menu--score">50</span></span
+      >
+      <span style="display: block"
+        >High score: <span id="gameover-menu--highscore">50</span></span
+      >
+    </div>
   </body>
 </html>

@@ -36,6 +36,13 @@ interface GameStateObserver {
    * @param newPoints New amount of points owned by the player.
    */
   pointsChanged(newPoints: number): void;
+
+  gameover(
+    localRunCount: number,
+    globalRunCount: number,
+    score: number,
+    highscore: number
+  ): void;
 }
 
 /**
@@ -99,6 +106,17 @@ class GameStateObservable {
   public notifyPointsChanged(newPoints: number): void {
     for (let observer of this.observers) {
       observer.pointsChanged(newPoints);
+    }
+  }
+
+  public notifyGameover(
+    localRunCount: number,
+    globalRunCount: number,
+    score: number,
+    highscore: number
+  ): void {
+    for (let observer of this.observers) {
+      observer.gameover(localRunCount, globalRunCount, score, highscore);
     }
   }
 }
@@ -320,6 +338,7 @@ class GameState {
   private snake: Snake;
   private foods: Food[];
   private points: number;
+  private gameover: boolean;
 
   /**
    * @brief Creates a new game state, with the given observers.
@@ -331,6 +350,7 @@ class GameState {
     this.snake = new Snake(this.observable);
     this.foods = [];
     this.points = 0;
+    this.gameover = false;
     for (let i = 0; i < FOOD_AMOUNT; i++) {
       this.replaceFood();
     }
@@ -349,6 +369,18 @@ class GameState {
       this.snake.moveAndGrow();
       this.increasePoints();
     }
+    if (this.isNowGameOver()) {
+      this.gameover = true;
+      const storedHighscore = window.localStorage.getItem("highscore");
+      const oldHighscore = storedHighscore ? parseInt(storedHighscore) : 0;
+      const highscore = Math.max(this.points, oldHighscore);
+      const storedRun = window.localStorage.getItem("localRun");
+      const oldRun = storedRun ? parseInt(storedRun) : 0;
+      const run = oldRun + 1;
+      window.localStorage.setItem("highscore", highscore.toString());
+      window.localStorage.setItem("localRun", run.toString());
+      this.observable.notifyGameover(run, NaN, this.points, highscore);
+    }
   }
 
   /**
@@ -359,12 +391,16 @@ class GameState {
     this.snake.tryToSetDirection(direction);
   }
 
+  public isGameover(): boolean {
+    return this.gameover;
+  }
+
   /**
    * @brief Checks whether the game is over (i.e. whether the snake has eaten
    *        itself).
    * @returns True if the game is over, false otherwise.
    */
-  public gameOver() {
+  private isNowGameOver() {
     return (
       this.snake.isHeadCrossingBody() || this.snake.isHeadOutOfGameBounds()
     );

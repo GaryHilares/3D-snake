@@ -27,6 +27,32 @@ class PointsCounterView {
   }
 }
 
+class GameoverView {
+  private static menuDomId = "gameover-menu";
+  private static localRunDomId = "gameover-menu--local-run-counter";
+  private static globalRunDomId = "gameover-menu--global-run-counter";
+  private static scoreDomId = "gameover-menu--score";
+  private static highscoreDomId = "gameover-menu--highscore";
+
+  public static display(
+    localRunCount: number,
+    globalRunCount: number,
+    score: number,
+    highscore: number
+  ): void {
+    const $ = document.getElementById.bind(document);
+    $(this.menuDomId)!.style.visibility = "visible";
+    $(this.localRunDomId)!.textContent = localRunCount.toString();
+    $(this.globalRunDomId)!.textContent = globalRunCount.toString();
+    $(this.scoreDomId)!.textContent = score.toString();
+    $(this.highscoreDomId)!.textContent = highscore.toString();
+  }
+
+  public static hide(): void {
+    document.getElementById(this.menuDomId)!.style.visibility = "hidden";
+  }
+}
+
 /**
  * @brief Represents controls to make rotate the camera around a position.
  */
@@ -273,6 +299,19 @@ class GameView implements GameStateObserver {
    */
   public pointsChanged(newPoints: number): void {
     PointsCounterView.setPointCount(newPoints);
+  }
+
+  public gameover(
+    localRunCount: number,
+    globalRunCount: number,
+    score: number,
+    highscore: number
+  ): void {
+    PointsCounterView.setShowing(false);
+    GameoverView.display(localRunCount, globalRunCount, score, highscore);
+    setInterval(() => {
+      this.controls.changeAngle(0.001, -0.001);
+    }, 1);
   }
 }
 

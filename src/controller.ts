@@ -14,7 +14,7 @@ interface GameStateable {
    * @brief Checks if the game is over.
    * @returns True if the game is over, false otherwise.
    */
-  gameOver(): boolean;
+  isGameover(): boolean;
 
   /**
    * Changes the orientation of the snake to the given direction.
@@ -45,7 +45,7 @@ class GameController {
    * @param time Time point of reference. Used to calculate deltatime.
    */
   public updateGame(time: number): void {
-    if (!this.gameState.gameOver()) {
+    if (!this.gameState.isGameover()) {
       const UPDATE_DELAY = 60;
       if (this.lastUpdated == null) {
         this.lastUpdated = time;
@@ -68,7 +68,7 @@ class GameController {
    * @param event Key event to read for updates.
    */
   public onKeyPress(event: KeyboardEvent): void {
-    if (!this.gameState.gameOver()) {
+    if (!this.gameState.isGameover()) {
       switch (event.key) {
         case "a":
           this.gameState.tryToSetSnakeDirection(Direction.X_NEGATIVE);
