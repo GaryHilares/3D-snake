@@ -100,8 +100,8 @@ class GameView implements GameStateObserver {
   private scene: THREE.Scene;
   private camera: THREE.Camera;
   private geometry: THREE.BoxGeometry;
-  private snakeMaterial: THREE.MeshBasicMaterial;
-  private foodMaterial: THREE.MeshBasicMaterial;
+  private snakeMaterial: THREE.Material;
+  private foodMaterial: THREE.Material;
   private meshes: { [pos: string]: THREE.Mesh };
   private controls: CustomOrbitControls;
 
@@ -113,8 +113,8 @@ class GameView implements GameStateObserver {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 100);
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
-    this.snakeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    this.foodMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    this.snakeMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+    this.foodMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
     this.meshes = {};
     this.camera.position.z = 5;
     this.controls = new CustomOrbitControls(this.camera);
@@ -130,6 +130,33 @@ class GameView implements GameStateObserver {
     });
     const border = new THREE.LineSegments(borderGeometry, borderMaterial);
     this.scene.add(border);
+
+    const lightIntensity = 100;
+    const lightDecay = 1.1;
+    const bottomLight = new THREE.PointLight(
+      0xffffff,
+      lightIntensity,
+      0,
+      lightDecay
+    );
+    bottomLight.position.set(
+      -Math.floor(GAME_BOX_SIDE / 2) - 3,
+      -Math.floor(GAME_BOX_SIDE / 2) - 3,
+      -Math.floor(GAME_BOX_SIDE / 2) - 3
+    );
+    this.scene.add(bottomLight);
+    const topLight = new THREE.PointLight(
+      0xffffff,
+      lightIntensity,
+      0,
+      lightDecay
+    );
+    topLight.position.set(
+      Math.floor(GAME_BOX_SIDE / 2) + 3,
+      Math.floor(GAME_BOX_SIDE / 2) + 3,
+      Math.floor(GAME_BOX_SIDE / 2) + 3
+    );
+    this.scene.add(topLight);
   }
 
   /**
