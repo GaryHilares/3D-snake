@@ -30,6 +30,10 @@ function main() {
   window.addEventListener("wheel", (event: WheelEvent) => {
     viewController.onWheel(event);
   });
+  window.addEventListener("resize", (event: Event) => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    gameView.setAspect(window.innerWidth / window.innerHeight);
+  });
   function animate(time: number) {
     gameController.updateGame(time);
     gameView.renderOn(renderer);

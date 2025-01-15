@@ -151,7 +151,7 @@ class CustomOrbitControls {
  */
 class GameView implements GameStateObserver {
   private scene: THREE.Scene;
-  private camera: THREE.Camera;
+  private camera: THREE.PerspectiveCamera;
   private geometry: THREE.BoxGeometry;
   private snakeMaterial: THREE.Material;
   private foodMaterial: THREE.Material;
@@ -210,6 +210,11 @@ class GameView implements GameStateObserver {
       Math.floor(GAME_BOX_SIDE / 2) + 3
     );
     this.scene.add(topLight);
+  }
+
+  public setAspect(aspect: number) {
+    this.camera.aspect = aspect;
+    this.camera.updateProjectionMatrix();
   }
 
   /**
