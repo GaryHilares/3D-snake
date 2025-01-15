@@ -69,23 +69,23 @@ class GameController {
    */
   public onKeyPress(event: KeyboardEvent): void {
     if (!this.gameState.isGameover()) {
-      switch (event.key) {
-        case "a":
+      switch (event.code) {
+        case "KeyA":
           this.gameState.tryToSetSnakeDirection(Direction.X_NEGATIVE);
           break;
-        case "d":
+        case "KeyD":
           this.gameState.tryToSetSnakeDirection(Direction.X_POSITIVE);
           break;
-        case "s":
+        case "KeyS":
           this.gameState.tryToSetSnakeDirection(Direction.Y_NEGATIVE);
           break;
-        case "w":
+        case "KeyW":
           this.gameState.tryToSetSnakeDirection(Direction.Y_POSITIVE);
           break;
-        case "q":
+        case "KeyQ":
           this.gameState.tryToSetSnakeDirection(Direction.Z_NEGATIVE);
           break;
-        case "e":
+        case "KeyE":
           this.gameState.tryToSetSnakeDirection(Direction.Z_POSITIVE);
           break;
       }
