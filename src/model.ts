@@ -207,12 +207,14 @@ class Snake {
   private observable: GameStateObservable;
   private body: Position[];
   private orientation: Direction;
+  private hasRotatedSinceLastMove: boolean;
 
   constructor(observable: GameStateObservable) {
     this.observable = observable;
     this.body = [new Position(0, 0, 0)];
     this.orientation = Direction.X_POSITIVE;
     this.observable.notifySnakeEntered(this.getHead());
+    this.hasRotatedSinceLastMove = false;
   }
 
   private targetBlock(): Position {
@@ -254,6 +256,7 @@ class Snake {
     }
     this.body[0] = this.targetBlock();
     this.observable.notifySnakeEntered(this.body[0]);
+    this.hasRotatedSinceLastMove = false;
   }
 
   /**
@@ -262,6 +265,7 @@ class Snake {
   public moveAndGrow(): void {
     this.body.unshift(this.targetBlock());
     this.observable.notifySnakeEntered(this.body[0]);
+    this.hasRotatedSinceLastMove = false;
   }
 
   /**
@@ -269,8 +273,9 @@ class Snake {
    *        a legal move (i.e. if the new orientation is not the opposite one).
    */
   public tryToSetDirection(direction: Direction) {
-    if (direction != -this.orientation) {
+    if (direction != -this.orientation && !this.hasRotatedSinceLastMove) {
       this.orientation = direction;
+      this.hasRotatedSinceLastMove = true;
     }
   }
 
