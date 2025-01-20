@@ -33,12 +33,14 @@ class GameoverView {
   private static globalRunDomId = "gameover-menu--global-run-counter";
   private static scoreDomId = "gameover-menu--score";
   private static highscoreDomId = "gameover-menu--highscore";
+  private static globalHighscoreDomId = "gameover-menu--global-highscore";
 
   public static display(
     localRunCount: number,
     globalRunCount: number,
     score: number,
-    highscore: number
+    highscore: number,
+    globalHighscore: number
   ): void {
     const $ = document.getElementById.bind(document);
     $(this.menuDomId)!.style.visibility = "visible";
@@ -46,6 +48,7 @@ class GameoverView {
     $(this.globalRunDomId)!.textContent = globalRunCount.toString();
     $(this.scoreDomId)!.textContent = score.toString();
     $(this.highscoreDomId)!.textContent = highscore.toString();
+    $(this.globalHighscoreDomId)!.textContent = globalHighscore.toString();
   }
 
   public static hide(): void {
@@ -316,11 +319,18 @@ class GameView implements GameStateObserver {
     localRunCount: number,
     globalRunCount: number,
     score: number,
-    highscore: number
+    highscore: number,
+    globalHighscore: number
   ): void {
     this.mouseEnabled = false;
     PointsCounterView.setShowing(false);
-    GameoverView.display(localRunCount, globalRunCount, score, highscore);
+    GameoverView.display(
+      localRunCount,
+      globalRunCount,
+      score,
+      highscore,
+      globalHighscore
+    );
     setInterval(() => {
       this.controls.changeAngle(0.001, -0.001);
     }, 1);

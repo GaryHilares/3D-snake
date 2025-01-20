@@ -43,7 +43,8 @@ interface GameStateObserver {
     localRunCount: number,
     globalRunCount: number,
     score: number,
-    highscore: number
+    highscore: number,
+    globalHighscore: number
   ): void;
 }
 
@@ -115,10 +116,18 @@ class GameStateObservable {
     localRunCount: number,
     globalRunCount: number,
     score: number,
-    highscore: number
+    highscore: number,
+    globalHighscore: number
   ): void {
+    console.log(globalHighscore);
     for (let observer of this.observers) {
-      observer.gameover(localRunCount, globalRunCount, score, highscore);
+      observer.gameover(
+        localRunCount,
+        globalRunCount,
+        score,
+        highscore,
+        globalHighscore
+      );
     }
   }
 }
@@ -465,7 +474,28 @@ class GameState {
       const run = oldRun + 1;
       window.localStorage.setItem("highscore", highscore.toString());
       window.localStorage.setItem("localRun", run.toString());
-      this.observable.notifyGameover(run, NaN, this.points, highscore);
+      fetch("https://3-d-snake-api.vercel.app/submit-run", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ score: this.points }),
+      })
+        .then((response) => response.json())
+        .then((response: { runCount: number; highscore: number }) => {
+          console.log(response);
+          this.observable.notifyGameover(
+            run,
+            response.runCount,
+            this.points,
+            highscore,
+            response.highscore
+          );
+        })
+        .catch(() => {
+          this.observable.notifyGameover(run, NaN, this.points, highscore, NaN);
+        });
     }
   }
 
