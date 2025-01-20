@@ -146,7 +146,7 @@ class ViewController {
    * @param event Keyboard event associated with the key press.
    */
   public onKeyPress(event: KeyboardEvent): void {
-    if (event.key == "c") {
+    if (event.code == "KeyC") {
       this.view.resetCameraPosition();
     }
   }

@@ -215,6 +215,7 @@ class GameView implements GameStateObserver {
       Math.floor(GAME_BOX_SIDE / 2) + 3
     );
     this.scene.add(topLight);
+    GameoverView.hide();
   }
 
   public setAspect(aspect: number) {

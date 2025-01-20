@@ -7,16 +7,28 @@ import { GameView } from "./view";
  * @brief Entrypoint of the program. Runs the 3D snake game.
  */
 function main() {
-  const gameView = new GameView(window.innerWidth / window.innerHeight);
-  const gameState = new GameState([gameView]);
-  const gameController = new GameController(gameState);
-  const viewController = new ViewController(gameView);
+  let gameView = new GameView(window.innerWidth / window.innerHeight);
+  let gameState = new GameState([gameView]);
+  let gameController = new GameController(gameState);
+  let viewController = new ViewController(gameView);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
+  function resetGame() {
+    gameView = new GameView(window.innerWidth / window.innerHeight);
+    gameState = new GameState([gameView]);
+    gameController = new GameController(gameState);
+    viewController = new ViewController(gameView);
+  }
+  document
+    .getElementById("gameover-menu--play-again")!
+    .addEventListener("click", resetGame);
   window.addEventListener("keydown", (event: KeyboardEvent) => {
     viewController.onKeyPress(event);
     gameController.onKeyPress(event);
+    if (event.code === "KeyR") {
+      resetGame();
+    }
   });
   window.addEventListener("mousedown", () => {
     viewController.onMouseDown();
