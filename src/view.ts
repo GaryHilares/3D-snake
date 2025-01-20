@@ -157,6 +157,7 @@ class GameView implements GameStateObserver {
   private foodMaterial: THREE.Material;
   private meshes: { [pos: string]: THREE.Mesh };
   private controls: CustomOrbitControls;
+  private mouseEnabled: boolean;
 
   /**
    * Creates a new 3D game view.
@@ -183,6 +184,7 @@ class GameView implements GameStateObserver {
     });
     const border = new THREE.LineSegments(borderGeometry, borderMaterial);
     this.scene.add(border);
+    this.mouseEnabled = true;
 
     const lightIntensity = 100;
     const lightDecay = 1.1;
@@ -278,7 +280,9 @@ class GameView implements GameStateObserver {
    * @param phiOffset Amount to add to the azimuthal angle.
    */
   public changeAngle(thetaOffset: number, phiOffset: number): void {
-    this.controls.changeAngle(thetaOffset, phiOffset);
+    if (this.mouseEnabled) {
+      this.controls.changeAngle(thetaOffset, phiOffset);
+    }
   }
 
   /**
@@ -287,7 +291,9 @@ class GameView implements GameStateObserver {
    * @param distanceOffset Amount to add to the distance.
    */
   public changeDistance(distanceOffset: number): void {
-    this.controls.changeDistance(distanceOffset);
+    if (this.mouseEnabled) {
+      this.controls.changeDistance(distanceOffset);
+    }
   }
 
   /**
@@ -312,6 +318,7 @@ class GameView implements GameStateObserver {
     score: number,
     highscore: number
   ): void {
+    this.mouseEnabled = false;
     PointsCounterView.setShowing(false);
     GameoverView.display(localRunCount, globalRunCount, score, highscore);
     setInterval(() => {
