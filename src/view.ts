@@ -166,8 +166,8 @@ class GameView implements GameStateObserver {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 100);
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
-    this.snakeMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-    this.foodMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    this.snakeMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    this.foodMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
     this.meshes = {};
     this.camera.position.z = 5;
     this.controls = new CustomOrbitControls(this.camera);
