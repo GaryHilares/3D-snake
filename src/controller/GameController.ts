@@ -1,18 +1,18 @@
-import { GameStateable } from "./GameStateable";
+import { GameControllable } from "./GameControllable";
 import { Direction } from "../model";
 
 /**
  * @brief Represents a game controller that updates a given game state.
  */
 class GameController {
-  private gameState: GameStateable;
+  private gameState: GameControllable;
   private lastUpdated: number | null;
 
   /**
    * @brief Creates a game controller that updates the given game state.
    * @param gameState Game state that this game controller will control.
    */
-  constructor(gameState: GameStateable) {
+  constructor(gameState: GameControllable) {
     this.gameState = gameState;
     this.lastUpdated = null;
   }

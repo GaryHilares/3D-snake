@@ -3,7 +3,7 @@ import { Direction } from "../model";
 /**
  * @brief Interface for a class that behaves like a 3D snake game state.
  */
-interface GameStateable {
+interface GameControllable {
   /**
    * @brief Goes to the next state of the game.
    */
@@ -22,4 +22,4 @@ interface GameStateable {
   tryToSetSnakeDirection(direction: Direction): void;
 }
 
-export { GameStateable };
+export { GameControllable };

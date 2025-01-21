@@ -4,11 +4,12 @@ import { ExclusiveRandomPositionGenerator } from "./ExclusiveRandomPositionGener
 import { Direction } from "./Direction";
 import { Food } from "./Food";
 import { Snake, GAME_BOX_SIDE } from "./Snake";
+import type { GameControllable } from "../controller";
 
 /**
  * @brief Represents a game state in the snake game.
  */
-class GameState {
+class GameState implements GameControllable {
   private observable: GameStateObservable;
   private snake: Snake;
   private foods: Food[];
