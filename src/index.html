@@ -7,11 +7,93 @@
       body {
         margin: 0;
         padding: 0;
+        background-color: black;
       }
     </style>
   </head>
   <body>
     <script type="module" src="./main.ts"></script>
+    <div
+      id="main-menu"
+      style="
+        visibility: visible;
+        position: absolute;
+        position: absolute;
+        color: white;
+        font-size: 28px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background-color: black;
+        padding: 50px 100px;
+        border: 1px solid white;
+      "
+    >
+      <h1>3D snake</h1>
+      <span id="main-menu--play-button" style="display: block; margin: 10px 0"
+        >Play</span
+      >
+      <span id="main-menu--controls-button" style="display: block"
+        >Controls</span
+      >
+    </div>
+    <div
+      id="controls-menu"
+      style="
+        visibility: hidden;
+        position: absolute;
+        color: white;
+        font-size: 28px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background-color: black;
+        width: 75%;
+        padding: 50px 100px;
+        border: 1px solid white;
+      "
+    >
+      <h1>Controls</h1>
+      <ul
+        style="
+          text-align: left;
+          font-size: 24px;
+          list-style-type: none;
+          column-count: 2;
+        "
+      >
+        <li style="break-inside: avoid-column">W - Move up</li>
+        <li style="break-inside: avoid-column">A - Move left</li>
+        <li style="break-inside: avoid-column">S - Move down</li>
+        <li style="break-inside: avoid-column">D - Move right</li>
+        <li style="break-inside: avoid-column">E - Move forward</li>
+        <li style="break-inside: avoid-column">Q - Move backwards</li>
+        <li style="break-inside: avoid-column">C - Reset camera position</li>
+        <li style="break-inside: avoid-column">
+          Drag while clicking - Rotate camera around snake
+        </li>
+        <li style="break-inside: avoid-column">
+          Scroll mouse wheel - Zoom camera in/out
+        </li>
+      </ul>
+      <button
+        id="controls-menu--go-back"
+        style="
+          border: 1px solid white;
+          background-color: transparent;
+          color: white;
+          display: block;
+          margin: 20px auto 0;
+          font-size: 28px;
+        "
+      >
+        Go back
+      </button>
+    </div>
     <div
       id="point-counter"
       style="
