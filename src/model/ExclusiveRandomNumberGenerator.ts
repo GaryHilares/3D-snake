@@ -84,6 +84,9 @@ class ExclusiveRng {
     if (!(this.low <= newExcluded && newExcluded <= this.high)) {
       throw new InvalidRangeError();
     }
+    if (oldExcluded == newExcluded) {
+      return;
+    }
     let oldIdx = -1;
     for (let i = 0; i < this.excluded.length; i++) {
       if (this.excluded[i] === oldExcluded) {
