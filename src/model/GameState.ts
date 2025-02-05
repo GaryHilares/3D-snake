@@ -3,8 +3,13 @@ import { GameStateObservable } from "./GameStateObservable";
 import { ExclusiveRandomPositionGenerator } from "./ExclusiveRandomPositionGenerator";
 import { Direction } from "./Direction";
 import { Food } from "./Food";
-import { Snake, GAME_BOX_SIDE } from "./Snake";
+import { Snake } from "./Snake";
 import type { GameControllable } from "../controller";
+
+/**
+ * @brief Size of a side of the game box. Must be odd.
+ */
+const GAME_BOX_SIDE = 21;
 
 /**
  * @brief Represents a game state in the snake game.
@@ -41,7 +46,7 @@ class GameState implements GameControllable {
   public goToNextState(): void {
     const consumedFoodIndex = this.indexOfFoodToBeEaten();
     if (consumedFoodIndex == -1) {
-      this.snake.moveAndNotGrow();
+      this.snake.moveAndNotGrow(GAME_BOX_SIDE);
     } else {
       this.replaceFood(consumedFoodIndex);
       this.snake.moveAndGrow();
@@ -99,9 +104,10 @@ class GameState implements GameControllable {
    *        itself).
    * @returns True if the game is over, false otherwise.
    */
-  private isNowGameOver() {
+  private isNowGameOver(): boolean {
     return (
-      this.snake.isHeadCrossingBody() || this.snake.isHeadOutOfGameBounds()
+      this.snake.isHeadCrossingBody() ||
+      this.snake.isHeadOutOfGameBounds(GAME_BOX_SIDE)
     );
   }
 
@@ -153,4 +159,4 @@ class GameState implements GameControllable {
   }
 }
 
-export { GameState };
+export { GameState, GAME_BOX_SIDE };

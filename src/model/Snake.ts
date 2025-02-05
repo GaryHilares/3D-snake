@@ -5,11 +5,6 @@ import { Direction } from "./Direction";
 import { Food } from "./Food";
 
 /**
- * @brief Size of a side of the game box. Must be odd.
- */
-const GAME_BOX_SIDE = 21;
-
-/**
  * @brief Represents a snake in the snake game.
  */
 class Snake {
@@ -67,7 +62,7 @@ class Snake {
   /**
    * @brief Makes the snake move without growing in size.
    */
-  public moveAndNotGrow(): void {
+  public moveAndNotGrow(boxSide: number): [Position, Position] {
     const blockLeft = this.body[this.body.length - 1];
     this.observable.notifySnakeLeft(blockLeft);
     for (let i = this.body.length - 1; i > 0; i--) {
@@ -76,18 +71,20 @@ class Snake {
     this.body[0] = this.targetBlock();
     this.observable.notifySnakeEntered(this.body[0]);
     this.hasRotatedSinceLastMove = false;
-    if (!this.isHeadOutOfGameBounds() && !this.isHeadCrossingBody()) {
+    if (!this.isHeadOutOfGameBounds(boxSide) && !this.isHeadCrossingBody()) {
       this.rng.updateOccupated(blockLeft, this.getHead());
     }
+    return [blockLeft, this.getHead()];
   }
 
   /**
    * @brief Makes the snake move and grow in size.
    */
-  public moveAndGrow(): void {
+  public moveAndGrow(): Position {
     this.body.unshift(this.targetBlock());
-    this.observable.notifySnakeEntered(this.body[0]);
+    this.observable.notifySnakeEntered(this.getHead());
     this.hasRotatedSinceLastMove = false;
+    return this.getHead();
   }
 
   /**
@@ -112,8 +109,8 @@ class Snake {
     });
   }
 
-  public isHeadOutOfGameBounds(): boolean {
-    const half_edge = Math.floor(GAME_BOX_SIDE / 2);
+  public isHeadOutOfGameBounds(boxSide: number): boolean {
+    const half_edge = Math.floor(boxSide / 2);
     const head = this.getHead();
     return (
       head.getX() < -half_edge ||
@@ -134,4 +131,4 @@ class Snake {
   }
 }
 
-export { Snake, GAME_BOX_SIDE };
+export { Snake };
