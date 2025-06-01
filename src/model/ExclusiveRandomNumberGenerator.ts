@@ -1,9 +1,38 @@
-class InvalidRangeError {}
+class InvalidRangeError extends Error {}
+
+/**
+ * @brief Represents a random integer generator.
+ */
+interface IRandomIntegerGenerator {
+  /**
+   * @brief Generates a random integer up to given integer, exclusive.
+   * @param low Lower bound on the number to be generated.
+   * @param high Upper bound on the number to be generated.
+   * @returns A random integer in the range [low, high].
+   */
+  generateInt(high: number): number;
+}
+
+/**
+ * Random integer generator that uses a uniform distribution.
+ */
+class RandomIntegerGenerator implements IRandomIntegerGenerator {
+  /**
+   * @brief Generates a random integer up to given number, exclusive, following
+   *        a uniform distribution.
+   * @param high Upper bound on the number to be generated (exclusive).
+   * @return A random integer in the range [0, high[.
+   */
+  public generateInt(high: number): number {
+    return Math.floor(Math.random() * high);
+  }
+}
 
 class ExclusiveRng {
   private low: number;
   private high: number;
   private excluded: number[];
+  private generator: IRandomIntegerGenerator;
 
   /**
    * @brief Creates a new ExclusiveRandomNumberGenerator.
@@ -12,7 +41,12 @@ class ExclusiveRng {
    * @param excluded A list of integers.
    * @throws InvalidRangeError If any number in excluded is not in range.
    */
-  constructor(low: number, high: number, excluded: number[]) {
+  constructor(
+    low: number,
+    high: number,
+    excluded: number[],
+    generator: IRandomIntegerGenerator = new RandomIntegerGenerator()
+  ) {
     if (
       !(low <= high) ||
       excluded.some((num: number) => !(low <= num && num <= high))
@@ -21,9 +55,8 @@ class ExclusiveRng {
     }
     this.low = low;
     this.high = high;
-    this.excluded = excluded.sort((a: number, b: number) => {
-      return a - b;
-    });
+    this.excluded = excluded.sort((a: number, b: number) => a - b);
+    this.generator = generator;
   }
 
   /**
@@ -34,13 +67,13 @@ class ExclusiveRng {
    * @throws InvalidRangeError if no number has probability of appearing.
    */
   generateRandomNumber(): number {
-    const validNumberCount = this.high - this.low + 1 - this.excluded.length;
     /**
      * @invariant numberIdx is the number that would result if
      *            this.excluded[0..i] (right-exclusive) was
      *            considered.
      */
-    let numberIdx = this.low + Math.floor(Math.random() * validNumberCount);
+    const validNumberTotal = this.high - this.low + 1 - this.excluded.length;
+    let numberIdx = this.generator.generateInt(validNumberTotal) + this.low;
     for (let i = 0; i < this.excluded.length; i++) {
       if (this.excluded[i] <= numberIdx) {
         numberIdx++;
@@ -54,7 +87,10 @@ class ExclusiveRng {
 
   /**
    * @brief Adds a new excluded integer.
-   * @param newExcluded The new excluded integer to add.
+   * @param newExcluded The new excluded integer to add. Must not be already
+   *        excluded and must be within the valid range.
+   * @throws InvalidRangeError if given integer is already excluded or outside
+   *         the valid range.
    */
   public addExcluded(newExcluded: number): void {
     if (
@@ -63,6 +99,12 @@ class ExclusiveRng {
     ) {
       throw new InvalidRangeError();
     }
+    /**
+     * @invariant this.excluded[..i-1] is sorted.
+     * @invariant this.excluded[i..] is sorted.
+     * @invariant this.excluded[i+1] is greater than all of
+     *            this.excluded[..i-1].
+     */
     this.excluded.push(newExcluded);
     for (let i = this.excluded.length - 2; i >= 0; i--) {
       if (this.excluded[i + 1] < this.excluded[i]) {
@@ -77,8 +119,12 @@ class ExclusiveRng {
 
   /**
    * @brief Replaces a excluded integer with a new one.
-   * @param oldExcluded The excluded integer to replace.
-   * @param newExcluded The new excluded integer.
+   * @param oldExcluded The excluded integer to replace. Must be excluded.
+   * @param newExcluded The new excluded integer. Must not be excluded yet
+   *        and must be inside the valid range.
+   * @throws InvalidRangeError if new excluded integer is already excluded (and
+   *         it is not the integer to be removed) or outside the valid range,
+   *         or if old excluded integer was not actually excluded.
    */
   public updateExcluded(oldExcluded: number, newExcluded: number): void {
     if (!(this.low <= newExcluded && newExcluded <= this.high)) {
@@ -113,4 +159,9 @@ class ExclusiveRng {
   }
 }
 
-export { ExclusiveRng, InvalidRangeError };
+export {
+  ExclusiveRng,
+  InvalidRangeError,
+  IRandomIntegerGenerator,
+  RandomIntegerGenerator,
+};
