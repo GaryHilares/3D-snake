@@ -5,6 +5,7 @@ import { Direction } from "./Direction";
 import { Food } from "./Food";
 import { Snake } from "./Snake";
 import type { GameControllable } from "../controller";
+import { Position } from "./Position";
 
 /**
  * @brief Size of a side of the game box. Must be odd.
@@ -27,13 +28,23 @@ class GameState implements GameControllable {
    * @param observers Observers that will observe this game state.
    */
   constructor(observers: GameStateObserver[] = []) {
-    const FOOD_AMOUNT = 10;
-    this.rng = new ExclusiveRandomPositionGenerator((GAME_BOX_SIDE - 1) / 2);
     this.observable = new GameStateObservable(observers);
+    this.resetGame();
+  }
+
+  private resetGame(): void {
+    const FOOD_AMOUNT = 10;
+    const absSide = (GAME_BOX_SIDE - 1) / 2;
+    const minimumCorner = new Position(-absSide, -absSide, -absSide);
+    const maximumCorner = new Position(-absSide, -absSide, -absSide);
+    this.rng = new ExclusiveRandomPositionGenerator(
+      minimumCorner,
+      maximumCorner
+    );
     this.snake = new Snake(this.observable, this.rng);
-    this.foods = [];
     this.points = 0;
     this.gameover = false;
+    this.foods = [];
     for (let i = 0; i < FOOD_AMOUNT; i++) {
       this.replaceFood();
     }

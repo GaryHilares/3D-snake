@@ -28,7 +28,19 @@ class RandomIntegerGenerator implements IRandomIntegerGenerator {
   }
 }
 
-class ExclusiveRng {
+/**
+ * Represents a exclusive random number generator.
+ */
+interface IExclusiveRng {
+  addExcluded(newExcluded: number): void;
+  generateRandomNumber(): number;
+  updateExcluded(oldExcluded: number, newExcluded: number): void;
+}
+
+/**
+ * Implementation of a exclusive random number generator.
+ */
+class ExclusiveRng implements IExclusiveRng {
   private low: number;
   private high: number;
   private excluded: number[];
@@ -41,7 +53,7 @@ class ExclusiveRng {
    * @param excluded A list of integers.
    * @throws InvalidRangeError If any number in excluded is not in range.
    */
-  constructor(
+  public constructor(
     low: number,
     high: number,
     excluded: number[],
@@ -66,7 +78,7 @@ class ExclusiveRng {
    *         not a excluded integer.
    * @throws InvalidRangeError if no number has probability of appearing.
    */
-  generateRandomNumber(): number {
+  public generateRandomNumber(): number {
     /**
      * @invariant numberIdx is the number that would result if
      *            this.excluded[0..i] (right-exclusive) was
@@ -160,6 +172,7 @@ class ExclusiveRng {
 }
 
 export {
+  IExclusiveRng,
   ExclusiveRng,
   InvalidRangeError,
   IRandomIntegerGenerator,
