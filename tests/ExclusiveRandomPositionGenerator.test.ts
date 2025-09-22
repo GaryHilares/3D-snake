@@ -131,7 +131,7 @@ describe("ExclusiveRandomPositionGenerator", () => {
         (maxX - minX + 1) * (maxY - minY + 1) * (maxZ - minZ + 1);
       const exclusiveRng = new FakeExclusiveRng(positionTotal, [0, 1]);
       const minCorner = new Position(minX, minY, minZ);
-      const maxCorner = new Position(minX, minY, minZ);
+      const maxCorner = new Position(maxX, maxY, maxZ);
       const generator = new ExclusiveRandomPositionGenerator(
         minCorner,
         maxCorner,
